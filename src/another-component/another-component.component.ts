@@ -19,7 +19,7 @@ export class AnotherComponentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('Inside ng on destory');
+    console.log('Inside ng on destroy');
     this.intervalSubscription?.unsubscribe();
   }
 }
