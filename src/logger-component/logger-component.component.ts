@@ -12,12 +12,11 @@ export class LoggerComponentComponent implements OnInit {
   ngOnInit() {
     console.log('Inside ngOninit');
     console.log(this.add(10, 32));
+    this.randomFunction();
   }
 
   @log()
-  randomFunction() {
-    console.log('Inside randomFunction');
-  }
+  randomFunction() {}
 
   @log()
   private add(a: number, b: number) {
@@ -42,7 +41,8 @@ export function log() {
       console.log(`Leaving ${key}`);
       return result;
     };
-    return descriptor.value;
+    console.log('*****', key);
+    return descriptor;
     // const originalMethod = descriptor.value;
 
     // descriptor.value = function (...args: any[]) {
