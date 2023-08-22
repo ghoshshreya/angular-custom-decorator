@@ -26,17 +26,18 @@ Name of the property or method being decorated
 descriptor describes the property or method being decorated. This object contains information such as the property's name, type, value, and visibility.
 ---*/
 
-export function log() {
-  return function (target: any, key: string, descriptor: any) {
-    const originalMd = descriptor.value;
-    console.log(originalMd);
-    descriptor.value = (...args: any[]) => {
-      // console.log('Hello', args);
-      console.log('Entering method ', key);
-      const result = originalMd.apply(this, args);
-      console.log('Leaving method ', key);
+export function log(): MethodDecorator {
+  return function (target: Function, key: string, descriptor: any) {
+    const originalMethod = descriptor.value;
+
+    descriptor.value = function (...args: any[]) {
+      console.log(`Entering ${key} method`);
+      const result = originalMethod.apply(this, args);
+      console.log(`Leaving ${key} method`);
+
       return result;
     };
+
     return descriptor;
   };
 }
