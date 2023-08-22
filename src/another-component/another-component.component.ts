@@ -13,11 +13,11 @@ export class AnotherComponentComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit() {
-    this.intervalSubscription = interval(1000)
-      .pipe(take(100))
-      .subscribe((x) => {
-        //console.log(x)
-      });
+    // this.intervalSubscription = interval(1000)
+    //   .pipe(take(100))
+    //   .subscribe((x) => {
+    //     console.log(x);
+    //   });
   }
 
   ngOnDestroy() {
