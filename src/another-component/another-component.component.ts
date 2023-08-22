@@ -7,10 +7,10 @@ import { take } from 'rxjs/operators';
   templateUrl: './another-component.component.html',
   styleUrls: ['./another-component.component.css'],
 })
-@AutoUnsubscribe()
+@AutoUnsubscribe(['anotherSubscription']) //In case we need to exclude certain subscriptions
 export class AnotherComponentComponent implements OnInit, OnDestroy {
   public intervalSubscription: Subscription | null = null;
-  constructor() {}
+  public anotherSubscription: Subscription | null = null;
 
   ngOnInit() {
     this.intervalSubscription = interval(1000)
@@ -18,25 +18,41 @@ export class AnotherComponentComponent implements OnInit, OnDestroy {
       .subscribe((x) => {
         console.log(x);
       });
+
+    this.anotherSubscription = interval(1000)
+      .pipe(take(10))
+      .subscribe((x) => {
+        console.log('Another Subscription', x);
+      });
   }
 
   ngOnDestroy() {
     console.log('Inside ng on destroy');
-    // this.intervalSubscription?.unsubscribe();
   }
 }
 
-export function AutoUnsubscribe() {
+export function AutoUnsubscribe(blacklist: any[]) {
   return function (constructor: any) {
     const originalDestroyMd = constructor.prototype.ngOnDestroy; // storing the original method
 
+    // overriding functaionality of ngOnDestory to unsubscribe automatically
     constructor.prototype.ngOnDestroy = function () {
       for (let args in this) {
         const property = this[args];
-        if (property && typeof property['unsubscribe'] === 'function') {
+        console.log('Blacklisted subscriptions', blacklist);
+        if (
+          property &&
+          blacklist.indexOf(args) === -1 &&
+          typeof property['unsubscribe'] === 'function'
+        ) {
           property.unsubscribe();
         }
       }
+
+      // to execute the original method, without this the original method will not be executed
+      originalDestroyMd &&
+        typeof originalDestroyMd === 'function' &&
+        originalDestroyMd.apply(this, arguments);
     };
   };
 }
