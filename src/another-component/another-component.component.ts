@@ -15,12 +15,14 @@ export class AnotherComponentComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.intervalSubscription = interval(1000)
       .pipe(take(100))
-      .subscribe((x) => console.log(x));
+      .subscribe((x) => {
+        //console.log(x)
+      });
   }
 
   ngOnDestroy() {
     console.log('Inside ng on destroy');
-    this.intervalSubscription?.unsubscribe();
+    // this.intervalSubscription?.unsubscribe();
   }
 }
 
@@ -28,6 +30,13 @@ export function AutoUnsubscribe() {
   return function (constructor: any) {
     const originalDestroyMd = constructor.prototype.ngOnDestroy; // storing the original method
 
-    constructor.prototype.ngOnDestroy;
+    constructor.prototype.ngOnDestroy = function () {
+      for (let args in this) {
+        const property = this[args];
+        if (property && typeof property['unsubscribe'] === 'function') {
+          property.unsubscribe();
+        }
+      }
+    };
   };
 }
