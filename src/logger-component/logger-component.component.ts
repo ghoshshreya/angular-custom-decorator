@@ -28,6 +28,15 @@ descriptor describes the property or method being decorated. This object contain
 
 export function log() {
   return function (target: any, key: string, descriptor: any) {
-    console.log(JSON.stringify(target), key, descriptor);
+    const originalMd = descriptor.value;
+    console.log(originalMd);
+    descriptor.value = (...args: any[]) => {
+      // console.log('Hello', args);
+      console.log('Entering method ', key);
+      const result = originalMd.apply(this, args);
+      console.log('Leaving method ', key);
+      return result;
+    };
+    return descriptor;
   };
 }
