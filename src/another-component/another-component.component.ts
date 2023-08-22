@@ -31,7 +31,7 @@ export class AnotherComponentComponent implements OnInit, OnDestroy {
   }
 }
 
-export function AutoUnsubscribe(blacklist: any[]) {
+export function AutoUnsubscribe(blacklist: any[]): ClassDecorator {
   return function (constructor: any) {
     const originalDestroyMd = constructor.prototype.ngOnDestroy; // storing the original method
 
