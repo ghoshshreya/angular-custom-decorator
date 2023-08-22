@@ -41,18 +41,6 @@ export function log() {
       console.log(`Leaving ${key}`);
       return result;
     };
-    console.log('*****', key);
     return descriptor;
-    // const originalMethod = descriptor.value;
-
-    // descriptor.value = function (...args: any[]) {
-    //   console.log(`Entering ${key} method`);
-    //   const result = originalMethod.apply(this, args);
-    //   console.log(`Leaving ${key} method`);
-
-    //   return result;
-    // };
-
-    // return descriptor;
   };
 }
